@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
             WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                    App()
                 }
             }
         }
@@ -27,14 +27,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun App() {
+    Navigation()
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     WeatherAppTheme {
-        Greeting("Android")
+        App()
     }
 }

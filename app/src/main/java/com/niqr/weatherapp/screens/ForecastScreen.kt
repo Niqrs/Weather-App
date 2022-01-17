@@ -1,4 +1,4 @@
-package com.niqr.weatherapp.navigation.screens
+package com.niqr.weatherapp.screens
 
 import androidx.compose.runtime.Composable
 
