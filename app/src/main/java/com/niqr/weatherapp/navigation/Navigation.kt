@@ -5,8 +5,8 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -37,8 +37,8 @@ fun BottomNavigationBar(navController: NavController) {
     NavigationBar() {
         bottomBarScreens.forEach { screen ->
             NavigationBarItem(
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = null) },
-                label = { Text(screen.route) },
+                icon = { Icon(painter = painterResource(screen.icon!!), contentDescription = null) },
+                label = { Text(screen.route.replaceFirstChar{ it.uppercaseChar() }) },
                 selected = currentRoute == screen.route,
                 onClick = {
                     navController.navigate(screen.route) {
