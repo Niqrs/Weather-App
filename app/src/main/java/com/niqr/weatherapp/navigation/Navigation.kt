@@ -19,11 +19,15 @@ import com.niqr.weatherapp.screens.TodayScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation() {
+
     val navController = rememberNavController()
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) {
+
         NavHost(navController = navController, startDestination = "today") {
+
             composable(Screen.Today.route) { TodayScreen() }
             composable(Screen.Forecast.route) { ForecastScreen() }
         }
@@ -32,16 +36,22 @@ fun Navigation() {
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
     NavigationBar() {
+
         bottomBarScreens.forEach { screen ->
+
             NavigationBarItem(
                 icon = { Icon(painter = painterResource(screen.icon!!), contentDescription = null) },
                 label = { Text(screen.route.replaceFirstChar{ it.uppercaseChar() }) },
                 selected = currentRoute == screen.route,
                 onClick = {
+
                     navController.navigate(screen.route) {
+
                         popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
                     }
