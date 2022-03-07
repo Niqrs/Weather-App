@@ -1,8 +1,11 @@
 package com.niqr.weatherapp
 
 import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,11 +57,7 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     Scaffold(
                         bottomBar = { BottomNavigationBar(navController) }
                     ) {
-
-
                         NavHost(navController = navController, startDestination = "today") {
-
-
                             composable(Screen.Today.route) { TodayScreen(viewModel.currentWeatherState) }
                             composable(Screen.Forecast.route) { ForecastScreen(viewModel.forecastsState) }
                         }

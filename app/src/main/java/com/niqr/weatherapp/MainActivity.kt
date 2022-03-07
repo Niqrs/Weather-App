@@ -132,6 +132,7 @@ class MainActivity : ComponentActivity() {
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 
         task.addOnSuccessListener { //Todo: it is work fine
+            return@addOnSuccessListener
         }
 
         task.addOnFailureListener { exception ->

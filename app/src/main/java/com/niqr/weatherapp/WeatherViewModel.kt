@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -80,12 +81,13 @@ class WeatherViewModel: ViewModel() {
                     Lce.Error(e)
                 } catch (e: Exception) { //TODO: Remove
                     Lce.Error(e)
-                } finally {
-                    isRefreshing = false
                 }
+        isRefreshing = false
     }
 
     private suspend fun updateForecast(location: Location?) {
+        Log.d("", location.toString())
+        Log.d("", "11111111111111111111111111111111111111")
         forecastsState =
             if (location == null)
                 Lce.Error(Throwable())
@@ -96,9 +98,8 @@ class WeatherViewModel: ViewModel() {
                     Lce.Error(e)
                 } catch (e: Exception) { //TODO: Remove
                     Lce.Error(e)
-                } finally {
-                    isRefreshing = false
                 }
+        isRefreshing = false
     }
 
     private fun isLocationPermissionGranted(context: Context): Boolean {
