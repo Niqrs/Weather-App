@@ -1,12 +1,13 @@
 package com.niqr.weatherapp.navigation
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -23,6 +24,7 @@ import com.niqr.weatherapp.WeatherViewModel
 import com.niqr.weatherapp.feature.Lce
 import com.niqr.weatherapp.screens.ForecastScreen
 import com.niqr.weatherapp.screens.TodayScreen
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,6 +32,8 @@ import com.niqr.weatherapp.screens.TodayScreen
 fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
 
     val navController = rememberNavController()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     when(viewModel.locationPermissionState) {
         LocationPermissionState.PERMISSION_GRANTED -> {
@@ -49,7 +53,10 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                             viewModel.isRefreshing = false
                         }
                     } else {
-                        Toast.makeText(activity, "Can't update weather without internet", Toast.LENGTH_SHORT).show()
+                        if (snackbarHostState.currentSnackbarData == null)
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Can't update weather without internet")
+                            }
                         viewModel.isRefreshing = false
                     }
                 },
@@ -64,6 +71,7 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     }
 
                     Scaffold(
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         bottomBar = { BottomNavigationBar(navController) }
                     ) {
                         NavHost(navController = navController, startDestination = "today") {
