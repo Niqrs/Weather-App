@@ -1,8 +1,11 @@
 package com.niqr.weatherapp.screens
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,12 +40,18 @@ private fun Content(forecasts: List<WeatherForecast>) {
 
 @Composable
 private fun Error(error: Throwable) {
-    when (error) {
-        is IllegalArgumentException -> {
-            Text("Something with request, may try later")
-        }
-        else -> {
-            Text("Something went wrong, may try later")
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        when (error) {
+            is IllegalArgumentException -> {
+                Text("Swipe to Refresh")
+            }
+            else -> {
+                Text("Something went wrong, may try later or swipe to Refresh")
+            }
         }
     }
     error.printStackTrace()

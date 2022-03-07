@@ -31,12 +31,18 @@ private fun Content(currentWeather: CurrentWeather) {
 
 @Composable
 private fun Error(error: Throwable) {
-    when (error) {
-        is IllegalArgumentException -> {
-            Text("Something with request, may try later")
-        }
-        else -> {
-            Text("Something went wrong, may try later")
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        when (error) {
+            is IllegalArgumentException -> {
+                Text("Something with request, may try later or swipe to Refresh")
+            }
+            else -> {
+                Text("Something went wrong, may try later or swipe to Refresh")
+            }
         }
     }
     error.printStackTrace()

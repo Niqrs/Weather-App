@@ -19,6 +19,7 @@ import com.niqr.weatherlisttest.requests.CurrentWeather
 import com.niqr.weatherlisttest.requests.WeatherForecast
 import com.niqr.weatherlisttest.requests.getCurrentWeather
 import com.niqr.weatherlisttest.requests.getForecast
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.nio.channels.UnresolvedAddressException
@@ -61,7 +62,15 @@ class WeatherViewModel: ViewModel() {
 
         val location: Location? =
             try {
-                locationTask().await()
+                if (isInternetAvailable) {
+                    Log.d("", "FEfefefefefeffe1")
+                    locationTask().await()
+                }
+                else
+                {
+                    Log.d("", "FEfefefefefeffe")
+                    null
+                }
             } catch (e: Exception) {
                 null
             }
@@ -100,6 +109,12 @@ class WeatherViewModel: ViewModel() {
                     Lce.Error(e)
                 }
         isRefreshing = false
+    }
+
+    fun setErrorState() {
+        val state = Lce.Error(Throwable())
+        currentWeatherState = state
+        forecastsState = state
     }
 
     private fun isLocationPermissionGranted(context: Context): Boolean {

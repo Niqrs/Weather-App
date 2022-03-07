@@ -1,11 +1,9 @@
-package com.niqr.weatherapp
+package com.niqr.weatherapp.navigation
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,11 +17,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.niqr.weatherapp.LocationPermissionState
+import com.niqr.weatherapp.MainActivity
+import com.niqr.weatherapp.WeatherViewModel
 import com.niqr.weatherapp.feature.Lce
-import com.niqr.weatherapp.navigation.Screen
-import com.niqr.weatherapp.navigation.bottomBarScreens
 import com.niqr.weatherapp.screens.ForecastScreen
 import com.niqr.weatherapp.screens.TodayScreen
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,26 +31,35 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
 
     val navController = rememberNavController()
 
-
     when(viewModel.locationPermissionState) {
         LocationPermissionState.PERMISSION_GRANTED -> {
             viewModel.isLocationEnabled = activity.isLocationEnabled()
-            Button(onClick = {}) {
-                Text("CurrentWeather")
-            }
-
+    
             SwipeRefresh(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberSwipeRefreshState(viewModel.isRefreshing),
                 onRefresh = {
                     viewModel.isRefreshing = true
-                    viewModel.updateWeather(activity::getCurrentLocation)
+                    viewModel.isLocationEnabled = activity.isLocationEnabled()
+                    if (viewModel.isInternetAvailable) {
+                        if (viewModel.isLocationEnabled!!) {
+                            viewModel.updateWeather(activity::getCurrentLocation)
+                        } else {
+                            activity.createLocationRequest()
+                            viewModel.isRefreshing = false
+                        }
+                    } else {
+                        Toast.makeText(activity, "Can't update weather without internet", Toast.LENGTH_SHORT).show()
+                        viewModel.isRefreshing = false
+                    }
                 },
             ) {
                 if (viewModel.isInternetAvailable || viewModel.forecastsState is Lce.Content) {
                     if (viewModel.isLocationEnabled!! && viewModel.forecastsState == null) {
+                        Log.d("", "4444444444444444")
                         viewModel.updateWeather(activity::getCurrentLocation)
                     } else if (!viewModel.isLocationEnabled!!) {
+                        Log.d("", "4444444455555554")
                         activity.createLocationRequest()
                     }
 

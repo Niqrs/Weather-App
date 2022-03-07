@@ -32,7 +32,9 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
+import com.niqr.weatherapp.navigation.Navigation
 import com.niqr.weatherapp.ui.theme.WeatherAppTheme
+
 
 class MainActivity : ComponentActivity() {
 
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var requestLocationPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var resolutionForResult: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var connectivityManager: ConnectivityManager
+    private var locationCancellationTokenSource = CancellationTokenSource()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = LocationRequest.PRIORITY_LOW_POWER
             interval = 10000
             fastestInterval = 5000
             maxWaitTime = 2000
@@ -81,6 +84,11 @@ class MainActivity : ComponentActivity() {
                 } else {
                     isResolutionLaunched = false
                     viewModel.isLocationEnabled = false
+                    viewModel.isRefreshing = false
+                    Log.d("", "FFFFFFFFFFFFFFFfff")
+                    locationCancellationTokenSource.cancel()
+                    locationCancellationTokenSource = CancellationTokenSource()
+                    viewModel.setErrorState()
                 }
             }
 
@@ -96,6 +104,7 @@ class MainActivity : ComponentActivity() {
             override fun onLost(network: Network) {
                 Log.i("Test", "Default -> Connection lost")
                 viewModel.isInternetAvailable = false
+                viewModel.isRefreshing = false
             }
         })
 
@@ -159,7 +168,8 @@ class MainActivity : ComponentActivity() {
         LocationManager::class.java))
 
     @SuppressLint("MissingPermission")
-    fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
+    fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, locationCancellationTokenSource.token)
+    //GPSTracker TEST
 }
 
 @Composable
