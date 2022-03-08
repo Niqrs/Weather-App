@@ -68,7 +68,7 @@ private fun Forecasts(weatherForecasts: List<WeatherForecast>) {
                         Text(weatherForecast.dayOfWeek)
                 }
             }
-            Text("${ if (weatherForecast.time.hour < 10) "0" else ""}${weatherForecast.time.hour}:00 | ${weatherForecast.weather} | ${weatherForecast.temperature}")
+            Text("${weatherForecast.time} | ${weatherForecast.weather} | ${weatherForecast.temperature}")
         }
     }
 }

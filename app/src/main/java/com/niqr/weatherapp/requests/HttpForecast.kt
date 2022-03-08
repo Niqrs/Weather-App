@@ -1,6 +1,5 @@
 package com.niqr.weatherlisttest.requests
 
-import io.ktor.client.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
@@ -27,7 +26,7 @@ sealed class HttpForecast: HttpApiShared() {
             }
             WeatherForecast(
                 icon = it.weather[0].icon,
-                time = it.date.toLocalDateTime(),
+                time = "${ if (it.date.toLocalDateTime().hour < 10) "0" else ""}${it.date.toLocalDateTime().hour}:00",
                 weather = it.weather[0].mainWeather,
                 temperature = it.mainInfo.temp.roundToInt(),
                 dayOfWeek = forecastDayOfWeek
@@ -79,7 +78,7 @@ sealed class HttpForecast: HttpApiShared() {
 
 data class WeatherForecast(
     val icon: String,
-    val time: LocalDateTime,
+    val time: String,
     val weather: String,
     val temperature: Int,
     val dayOfWeek: String

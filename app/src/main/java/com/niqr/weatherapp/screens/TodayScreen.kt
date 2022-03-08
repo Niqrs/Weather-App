@@ -7,6 +7,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.niqr.weatherapp.feature.Lce
 import com.niqr.weatherlisttest.requests.CurrentWeather
 
@@ -48,17 +51,47 @@ private fun Error(error: Throwable) {
     error.printStackTrace()
 }
 
+@Preview("TodayScreen")
 @Composable
-fun TodayWeather(currentWeather: CurrentWeather) {
+private fun TodayWeather(
+    @PreviewParameter(CurrentWeatherPreviewParameterProvider::class)
+    currentWeather: CurrentWeather
+) {
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())) {
         Text("icon: ${currentWeather.icon}")
         Text("temperature: ${currentWeather.temperature}")
+        Text("feelsLike: ${currentWeather.feelsLike}")
         Text("mainWeather: ${currentWeather.mainWeather}")
+        Text("cityName: ${currentWeather.cityName}")
+        Text("country: ${currentWeather.country}")
 
         Text("humidity: ${currentWeather.humidity}")
         Text("pressure: ${currentWeather.pressure}")
         Text("windSpeed: ${currentWeather.windSpeed}")
+
+        Text("sunriseTime: ${currentWeather.sunriseTime}")
+        Text("sunsetTime: ${currentWeather.sunsetTime}")
     }
+}
+
+class CurrentWeatherPreviewParameterProvider : PreviewParameterProvider<CurrentWeather> {
+    override val values = sequenceOf(
+        CurrentWeather(
+            icon ="04n",
+            temperature = -6,
+            feelsLike = -8,
+            mainWeather = "Clouds",
+            cityName = "Moscow",
+            country = "RU",
+
+            humidity = 63,
+            pressure = 1020,
+            windSpeed = 6.0f,
+
+            sunriseTime = "07:26",
+            sunsetTime = "22:26"
+        ),
+    )
 }
