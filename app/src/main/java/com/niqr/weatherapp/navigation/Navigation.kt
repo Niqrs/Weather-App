@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -71,9 +72,11 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     }
 
                     Scaffold(
+                        topBar = { TopAppBar(navController) },
                         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         bottomBar = { BottomNavigationBar(navController) }
                     ) {
+                        Divider(thickness = 2.dp)
                         NavHost(navController = navController, startDestination = "today") {
                             composable(Screen.Today.route) { TodayScreen(viewModel.currentWeatherState) }
                             composable(Screen.Forecast.route) { ForecastScreen(viewModel.forecastsState) }
@@ -110,6 +113,15 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
     }
 
 
+}
+
+@Composable
+fun TopAppBar(navController: NavController) {
+    CenterAlignedTopAppBar(
+        title = { navController.currentBackStackEntryAsState().value?.destination?.route?.let { route ->
+            Text(route.replaceFirstChar{ it.uppercaseChar() })
+        } },
+    )
 }
 
 @Composable
