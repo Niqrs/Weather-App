@@ -77,4 +77,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
 
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.3-alpha"
+
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 }

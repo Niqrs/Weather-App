@@ -1,16 +1,21 @@
 package com.niqr.weatherapp.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import com.niqr.weatherapp.feature.Lce
+import com.niqr.weatherapp.feature.getWeatherIconId
 import com.niqr.weatherlisttest.requests.CurrentWeather
 
 @Composable
@@ -59,24 +64,73 @@ private fun TodayWeather(
 ) {
     Column(modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(rememberScrollState())) {
-        Text("icon: ${currentWeather.icon}")
-        Text("temperature: ${currentWeather.temperature}")
-        Text("feelsLike: ${currentWeather.feelsLike}")
-        Text("mainWeather: ${currentWeather.mainWeather}")
-        Text("cityName: ${currentWeather.cityName}")
-        Text("country: ${currentWeather.country}")
-
-        Text("humidity: ${currentWeather.humidity}")
-        Text("pressure: ${currentWeather.pressure}")
-        Text("windSpeed: ${currentWeather.windSpeed}")
-
-        Text("sunriseTime: ${currentWeather.sunriseTime}")
-        Text("sunsetTime: ${currentWeather.sunsetTime}")
+        .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(64.dp))
+        MainInformation(currentWeather)
+        Spacer(modifier = Modifier.height(64.dp))
+        Divider(thickness = 2.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+        AdditionalInformation(currentWeather)
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(thickness = 2.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+        SunMovementInformation(currentWeather)
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(thickness = 2.dp)
+//        Text("icon: ${currentWeather.icon}")
+//        Text("temperature: ${currentWeather.temperature}")
+//        Text("feelsLike: ${currentWeather.feelsLike}")
+//        Text("mainWeather: ${currentWeather.mainWeather}")
+//        Text("cityName: ${currentWeather.cityName}")
+//        Text("country: ${currentWeather.country}")
+//
+//        Text("humidity: ${currentWeather.humidity}")
+//        Text("pressure: ${currentWeather.pressure}")
+//        Text("windSpeed: ${currentWeather.windSpeed}")
+//
+//        Text("sunriseTime: ${currentWeather.sunriseTime}")
+//        Text("sunsetTime: ${currentWeather.sunsetTime}")
     }
 }
 
-class CurrentWeatherPreviewParameterProvider : PreviewParameterProvider<CurrentWeather> {
+@Composable
+private fun MainInformation(currentWeather: CurrentWeather) {
+    Icon(
+        painter = painterResource(getWeatherIconId(currentWeather.icon)),
+        modifier = Modifier.size(144.dp),
+        contentDescription = null
+    )
+    Text("${currentWeather.cityName}, ${currentWeather.country}") //TODO: it can be empty
+    Text("${currentWeather.temperature}°C | ${currentWeather.mainWeather}")
+    Text("Feels like: ${currentWeather.feelsLike}°C")
+}
+
+@Composable
+private fun AdditionalInformation(currentWeather: CurrentWeather) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text("${currentWeather.windSpeed} km/h")
+        Text("${currentWeather.humidity}%")
+        Text("${currentWeather.pressure} hPa")
+    }
+}
+
+@Composable
+private fun SunMovementInformation(currentWeather: CurrentWeather) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text(currentWeather.sunriseTime)
+        Text(currentWeather.sunsetTime)
+    }
+}
+
+private class CurrentWeatherPreviewParameterProvider : PreviewParameterProvider<CurrentWeather> {
     override val values = sequenceOf(
         CurrentWeather(
             icon ="04n",
