@@ -2,6 +2,7 @@ package com.niqr.weatherapp.navigation
 
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -75,9 +76,13 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                         topBar = { TopAppBar(navController) },
                         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         bottomBar = { BottomNavigationBar(navController) }
-                    ) {
+                    ) { innerPadding ->
                         Divider(thickness = 2.dp)
-                        NavHost(navController = navController, startDestination = "today") {
+                        NavHost(
+                            modifier = Modifier.padding(innerPadding),
+                            navController = navController,
+                            startDestination = "today"
+                        ) {
                             composable(Screen.Today.route) { TodayScreen(viewModel.currentWeatherState) }
                             composable(Screen.Forecast.route) { ForecastScreen(viewModel.forecastsState) }
                         }
