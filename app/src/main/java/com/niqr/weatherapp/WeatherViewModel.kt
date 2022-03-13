@@ -13,15 +13,12 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.tasks.Task
 import com.niqr.weatherapp.feature.Lce
 import com.niqr.weatherlisttest.requests.CurrentWeather
 import com.niqr.weatherlisttest.requests.WeatherForecast
 import com.niqr.weatherlisttest.requests.getCurrentWeather
 import com.niqr.weatherlisttest.requests.getForecast
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.nio.channels.UnresolvedAddressException
 
 
@@ -56,7 +53,7 @@ class WeatherViewModel: ViewModel() {
             }
         }
 
-    fun updateWeather(locationTask: () -> Task<Location>) = viewModelScope.launch {
+    fun updateWeather(locationTask: suspend () -> Location?) = viewModelScope.launch {
         currentWeatherState = Lce.Loading
         forecastsState = Lce.Loading
 
@@ -64,7 +61,7 @@ class WeatherViewModel: ViewModel() {
             try {
                 if (isInternetAvailable) {
                     Log.d("", "FEfefefefefeffe1")
-                    locationTask().await()
+                    locationTask()
                 }
                 else
                 {

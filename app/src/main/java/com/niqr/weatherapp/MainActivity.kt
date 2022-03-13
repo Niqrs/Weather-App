@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
 import com.niqr.weatherapp.navigation.Navigation
 import com.niqr.weatherapp.ui.theme.WeatherAppTheme
+import kotlinx.coroutines.tasks.await
 
 
 class MainActivity : ComponentActivity() {
@@ -167,9 +168,19 @@ class MainActivity : ComponentActivity() {
     fun isLocationEnabled() = LocationManagerCompat.isLocationEnabled(this.getSystemService(
         LocationManager::class.java))
 
+    suspend fun getLocation(): Location {
+        var location: Location?
+        location = getLastKnownLocation().await()
+        if (location == null)
+            location = getCurrentLocation().await()
+        return location
+    }
+
     @SuppressLint("MissingPermission")
-    fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, locationCancellationTokenSource.token)
-    //GPSTracker TEST
+    private fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, locationCancellationTokenSource.token)
+
+    @SuppressLint("MissingPermission")
+    private fun getLastKnownLocation(): Task<Location?> = fusedLocationClient.lastLocation
 }
 
 @Composable

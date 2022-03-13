@@ -49,7 +49,7 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     viewModel.isLocationEnabled = activity.isLocationEnabled()
                     if (viewModel.isInternetAvailable) {
                         if (viewModel.isLocationEnabled!!) {
-                            viewModel.updateWeather(activity::getCurrentLocation)
+                            viewModel.updateWeather(activity::getLocation)
                         } else {
                             activity.createLocationRequest()
                             viewModel.isRefreshing = false
@@ -66,7 +66,7 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                 if (viewModel.isInternetAvailable || viewModel.forecastsState is Lce.Content) {
                     if (viewModel.isLocationEnabled!! && viewModel.forecastsState == null) {
                         Log.d("", "4444444444444444")
-                        viewModel.updateWeather(activity::getCurrentLocation)
+                        viewModel.updateWeather(activity::getLocation)
                     } else if (!viewModel.isLocationEnabled!!) {
                         Log.d("", "4444444455555554")
                         activity.createLocationRequest()
