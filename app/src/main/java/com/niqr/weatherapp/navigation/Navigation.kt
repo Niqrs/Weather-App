@@ -75,11 +75,11 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     Scaffold(
                         topBar = { TopAppBar(navController) },
                         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-                        bottomBar = { BottomNavigationBar(navController) }
+                        bottomBar = { BottomNavigationBar(navController) },
+
                     ) { innerPadding ->
-                        Divider(thickness = 2.dp)
                         NavHost(
-                            modifier = Modifier.padding(innerPadding),
+                            modifier = Modifier.padding(horizontal = 16.dp).padding(innerPadding),
                             navController = navController,
                             startDestination = "today"
                         ) {
@@ -123,8 +123,9 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
 @Composable
 fun TopAppBar(navController: NavController) {
     CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
         title = { navController.currentBackStackEntryAsState().value?.destination?.route?.let { route ->
-            Text(route.replaceFirstChar{ it.uppercaseChar() })
+            Text(route.replaceFirstChar{ it.uppercaseChar() }, color = MaterialTheme.colorScheme.onPrimary)
         } },
     )
 }
