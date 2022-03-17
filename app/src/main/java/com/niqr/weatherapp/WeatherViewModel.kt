@@ -1,6 +1,6 @@
 package com.niqr.weatherapp
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -117,12 +117,12 @@ class WeatherViewModel: ViewModel() {
     private fun isLocationPermissionGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
-            ACCESS_COARSE_LOCATION
+            ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun shouldShowLocationRequestPermissionRationale(activity: Activity): Boolean =
-        shouldShowRequestPermissionRationale(activity, ACCESS_COARSE_LOCATION)
+        shouldShowRequestPermissionRationale(activity, ACCESS_FINE_LOCATION)
 }
 
 enum class LocationPermissionState(val message: String) {

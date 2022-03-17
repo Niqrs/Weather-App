@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_LOW_POWER
+            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
             interval = 10000
             fastestInterval = 5000
             maxWaitTime = 2000
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     viewModel.locationPermissionState = LocationPermissionState.PERMISSION_GRANTED
                 } else {
                     viewModel.locationPermissionState =
-                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
+                        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
                             LocationPermissionState.SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE
                         else
                             LocationPermissionState.PERMISSION_DENIED
@@ -132,12 +132,11 @@ class MainActivity : ComponentActivity() {
     }
 
     fun locationPermissionRequest() =
-        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
     fun createLocationRequest() {
         val builder = LocationSettingsRequest.Builder()
             .setAlwaysShow(true)
-            .setNeedBle(true)
             .addLocationRequest(locationRequest)
 
         val client: SettingsClient = LocationServices.getSettingsClient(this)
@@ -179,7 +178,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, locationCancellationTokenSource.token)
+    private fun getCurrentLocation(): Task<Location> = fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY, locationCancellationTokenSource.token)
 
     @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Task<Location?> = fusedLocationClient.lastLocation
