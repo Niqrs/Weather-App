@@ -4,13 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -76,41 +81,55 @@ private fun Forecasts(
         itemsIndexed(weatherForecasts) { index, weatherForecast ->
             when (index) {
                 0 -> {
-                    Text(weatherForecast.dayOfWeek)
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
                 else -> {
                     if (weatherForecast.dayOfWeek != weatherForecasts[index - 1].dayOfWeek) {
-                        Text(weatherForecast.dayOfWeek)
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
-            ForecastCard(weatherForecast)
-            Spacer(modifier = Modifier.height(6.dp))
+            ForecastBlock(weatherForecast)
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun ForecastCard(weatherForecast: WeatherForecast) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+fun ForecastBlock(weatherForecast: WeatherForecast) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        tonalElevation = 8.dp,
+        shadowElevation = 1.dp
     ) {
-        Icon(
-            painter = painterResource(id = getWeatherIconId(weatherForecast.icon)),
-            contentDescription = null,
-            modifier = Modifier.size(64.dp)
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = weatherForecast.time)
-            Text(text = weatherForecast.weather)
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = getWeatherIconId(weatherForecast.icon)),
+                contentDescription = null,
+                modifier = Modifier.padding(horizontal = 6.dp).size(with(LocalDensity.current) {
+                    72.sp.toDp()
+                }),
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = weatherForecast.time, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = MaterialTheme.colorScheme.tertiary)
+                Text(text = weatherForecast.weather, fontWeight = FontWeight.Medium, fontSize = 16.sp, color = MaterialTheme.colorScheme.tertiary)
+            }
+            Text(
+                modifier = Modifier.padding(horizontal = 6.dp),
+                text = "${weatherForecast.temperature}°",
+                fontSize = 64.sp,
+                color = MaterialTheme.colorScheme.tertiary
+            )
         }
-        Text(
-            text = "${weatherForecast.temperature}°",
-            fontSize = 64.sp
-        )
     }
 }
 
