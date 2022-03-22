@@ -24,8 +24,7 @@ import com.niqr.weatherapp.LocationPermissionState
 import com.niqr.weatherapp.MainActivity
 import com.niqr.weatherapp.WeatherViewModel
 import com.niqr.weatherapp.feature.Lce
-import com.niqr.weatherapp.screens.ForecastScreen
-import com.niqr.weatherapp.screens.TodayScreen
+import com.niqr.weatherapp.screens.*
 import kotlinx.coroutines.launch
 
 
@@ -79,7 +78,9 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
 
                     ) { innerPadding ->
                         NavHost(
-                            modifier = Modifier.padding(horizontal = 16.dp).padding(innerPadding),
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .padding(innerPadding),
                             navController = navController,
                             startDestination = "today"
                         ) {
@@ -93,23 +94,14 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
             }
         }
 
-        LocationPermissionState.PERMISSION_DENIED -> {
-            Button(onClick = { activity.settingsActivityIntent(activity) }) {
-                Text("Open Settings")
-            }
-        }
+        LocationPermissionState.PERMISSION_DENIED ->
+            LocationPermissionDeniedScreen(onClick = activity::settingsActivityIntent)
 
-        LocationPermissionState.SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE -> {
-            //TODO: showInContextUI(...)
-            Button(onClick = activity::locationPermissionRequest
-            ) {
-                Text("WAITING RESPONSE")
-            }
-        }
+        LocationPermissionState.SHOULD_SHOW_REQUEST_PERMISSION_RATIONALE ->
+            ShouldShowRequestPermissionRationaleScreen(onClick = activity::locationPermissionRequest)
 
-        LocationPermissionState.WAITING_RESPONSE -> {
-            Text("WAITING RESPONSE2")
-        }
+        LocationPermissionState.WAITING_RESPONSE ->
+            WaitingLocationResponseScreen()
     }
     if (viewModel.locationPermissionState != null) {
         Log.d("", viewModel.locationPermissionState!!.message)

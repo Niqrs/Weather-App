@@ -12,7 +12,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.Uri
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -46,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var requestLocationPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var resolutionForResult: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var locationAccessibilityLauncher: ActivityResultLauncher<Intent>
     private var locationCancellationTokenSource = CancellationTokenSource()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +94,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+        locationAccessibilityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.updateLocationPermissionState(this)
+        }
+
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         connectivityManager.registerDefaultNetworkCallback(object :
@@ -124,11 +128,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun settingsActivityIntent(context: Context) {
+    fun settingsActivityIntent() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        val uri: Uri = Uri.fromParts("package", ContactsContract.Directory.PACKAGE_NAME, null)
+        val uri = Uri.fromParts("package", packageName, null)
         intent.data = uri
-        context.startActivity(intent)
+        locationAccessibilityLauncher.launch(intent)
     }
 
     fun locationPermissionRequest() =
