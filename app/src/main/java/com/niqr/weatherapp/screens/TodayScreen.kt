@@ -55,7 +55,9 @@ private fun Error(error: Throwable) {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            modifier = Modifier.size(256.dp).aspectRatio(1f),
+            modifier = Modifier
+                .size(256.dp)
+                .aspectRatio(1f),
             painter = painterResource(R.drawable.ic_sad_cloud_24dp),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary
@@ -99,30 +101,36 @@ private fun MainInformation(currentWeather: CurrentWeather) {
         tonalElevation = 8.dp,
         shadowElevation = 1.dp
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(getWeatherIconId(currentWeather.icon)),
                 modifier = Modifier
-                    .size(196.dp)
+                    .weight(1f)
                     .aspectRatio(1f),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.tertiary
             )
-            Text(
-                text = "${currentWeather.mainWeather} | ${currentWeather.temperature}°",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.tertiary,
-            )
-            Text(
-                "Feels like: ${currentWeather.feelsLike}°C",
-                color = MaterialTheme.colorScheme.tertiary,
-            )
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${currentWeather.mainWeather} | ${currentWeather.temperature}°",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
+                Text(
+                    "Feels like: ${currentWeather.feelsLike}°C",
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
+            }
         }
     }
 }
@@ -182,6 +190,7 @@ private fun WeatherInfoBlock(modifier: Modifier = Modifier, icon: Int, info: Str
                 Text(
                     text = info,
                     color = MaterialTheme.colorScheme.tertiary,
+                    maxLines = 1
                 )
             }
         }
