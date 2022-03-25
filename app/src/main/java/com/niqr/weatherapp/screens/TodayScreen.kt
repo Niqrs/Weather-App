@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.niqr.weatherapp.R
 import com.niqr.weatherapp.feature.Lce
 import com.niqr.weatherapp.feature.getWeatherIconId
+import com.niqr.weatherapp.ui.animations.DotsPulsing
 import com.niqr.weatherlisttest.requests.CurrentWeather
 
 @Composable
@@ -31,7 +32,12 @@ fun TodayScreen(state: Lce<CurrentWeather>?) {
 
 @Composable
 private fun Loading() {
-    Text("Loading...")
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        DotsPulsing()
+    }
 }
 
 @Composable
@@ -44,18 +50,19 @@ private fun Error(error: Throwable) {
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        when (error) {
-            is IllegalArgumentException -> {
-                Text("Something with request, may try later or swipe to Refresh")
-            }
-            else -> {
-                Text("Something went wrong, may try later or swipe to Refresh")
-            }
-        }
+        Icon(
+            modifier = Modifier.size(256.dp).aspectRatio(1f),
+            painter = painterResource(R.drawable.ic_sad_cloud_24dp),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Text("Something went wrong", color = MaterialTheme.colorScheme.primary)
+        Text("Swipe to Refresh", color = MaterialTheme.colorScheme.primary)
     }
-    error.printStackTrace()
 }
 
 @Preview("TodayScreen")
