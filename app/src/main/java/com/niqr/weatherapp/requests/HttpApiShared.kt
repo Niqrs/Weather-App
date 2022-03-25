@@ -6,6 +6,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.serializer
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId

@@ -1,6 +1,5 @@
 package com.niqr.weatherapp.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
@@ -64,10 +63,8 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
             ) {
                 if (viewModel.isInternetAvailable || viewModel.forecastsState is Lce.Content) {
                     if (viewModel.isLocationEnabled!! && viewModel.forecastsState == null) {
-                        Log.d("", "4444444444444444")
                         viewModel.updateWeather(activity::getLocation)
                     } else if (!viewModel.isLocationEnabled!!) {
-                        Log.d("", "4444444455555554")
                         activity.createLocationRequest()
                     }
 
@@ -103,13 +100,6 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
         LocationPermissionState.WAITING_RESPONSE ->
             WaitingLocationResponseScreen()
     }
-    if (viewModel.locationPermissionState != null) {
-        Log.d("", viewModel.locationPermissionState!!.message)
-    } else {
-        Log.d("", "NUUUL")
-    }
-
-
 }
 
 @Composable
