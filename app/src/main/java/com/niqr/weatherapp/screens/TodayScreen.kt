@@ -1,9 +1,12 @@
 package com.niqr.weatherapp.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowRightAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +23,7 @@ import com.niqr.weatherapp.feature.Lce
 import com.niqr.weatherapp.feature.getWeatherIconId
 import com.niqr.weatherapp.ui.animations.DotsPulsing
 import com.niqr.weatherlisttest.requests.CurrentWeather
+import kotlin.math.roundToInt
 
 @Composable
 fun TodayScreen(state: Lce<CurrentWeather>?) {
@@ -60,10 +64,10 @@ private fun Error(error: Throwable) {
                 .aspectRatio(1f),
             painter = painterResource(R.drawable.ic_sad_cloud_24dp),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
         )
-        Text("Something went wrong", color = MaterialTheme.colorScheme.primary)
-        Text("Swipe to Refresh", color = MaterialTheme.colorScheme.primary)
+        Text("Something went wrong", color = MaterialTheme.colorScheme.tertiary)
+        Text("Swipe to Refresh", color = MaterialTheme.colorScheme.tertiary)
     }
 }
 
@@ -76,27 +80,22 @@ private fun TodayWeather(
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        MainInformation(currentWeather)
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider(modifier = Modifier.padding(horizontal = 0.dp), color = MaterialTheme.colorScheme.surfaceVariant)
-        Spacer(modifier = Modifier.height(16.dp))
-        AdditionalInformation(currentWeather)
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider(modifier = Modifier.padding(horizontal = 96.dp), color = MaterialTheme.colorScheme.surfaceVariant)
-        Spacer(modifier = Modifier.height(16.dp))
-        SunMovementInformation(currentWeather)
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider(modifier = Modifier.padding(horizontal = 0.dp), color = MaterialTheme.colorScheme.surfaceVariant)
-        Spacer(modifier = Modifier.height(16.dp))
+        MainInformation(currentWeather, modifier = Modifier.padding(vertical = 8.dp))
+        Divider(modifier = Modifier.fillMaxWidth().height(2.dp), color = MaterialTheme.colorScheme.surfaceVariant)
+        AdditionalInformation(currentWeather, modifier = Modifier.padding(vertical = 8.dp))
+        Divider(modifier = Modifier.fillMaxWidth(0.6f).height(2.dp), color = MaterialTheme.colorScheme.surfaceVariant)
+        SunMovementInformation(currentWeather, modifier = Modifier.padding(vertical = 8.dp))
+        Divider(modifier = Modifier.fillMaxWidth().height(2.dp), color = MaterialTheme.colorScheme.surfaceVariant)
     }
 }
 
 @Composable
-private fun MainInformation(currentWeather: CurrentWeather) {
+private fun MainInformation(currentWeather: CurrentWeather, modifier: Modifier = Modifier) {
     Surface(
+        modifier = modifier,
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
         shadowElevation = 1.dp
@@ -114,7 +113,7 @@ private fun MainInformation(currentWeather: CurrentWeather) {
                     .weight(1f)
                     .aspectRatio(1f),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.tertiary
+                tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -124,7 +123,7 @@ private fun MainInformation(currentWeather: CurrentWeather) {
                     text = "${currentWeather.mainWeather} | ${currentWeather.temperature}°",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary },
                 )
                 Text(
                     "Feels like: ${currentWeather.feelsLike}°C",
@@ -136,14 +135,14 @@ private fun MainInformation(currentWeather: CurrentWeather) {
 }
 
 @Composable
-private fun AdditionalInformation(currentWeather: CurrentWeather) {
+private fun AdditionalInformation(currentWeather: CurrentWeather, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Spacer(modifier = Modifier.width(8.dp))
         WeatherInfoBlock(modifier = Modifier
-            .weight(1f), icon = R.drawable.ic_wind_speed_24dp,info = "${currentWeather.windSpeed} km/h")
+            .weight(1f), icon = R.drawable.ic_wind_speed_24dp,info = "${currentWeather.windSpeed.roundToInt()} km/h")
         Spacer(modifier = Modifier.width(24.dp))
         WeatherInfoBlock(modifier = Modifier
             .weight(1f), icon = R.drawable.ic_humidity_24dp,info = "${currentWeather.humidity}%")
@@ -155,15 +154,24 @@ private fun AdditionalInformation(currentWeather: CurrentWeather) {
 }
 
 @Composable
-private fun SunMovementInformation(currentWeather: CurrentWeather) {
+private fun SunMovementInformation(currentWeather: CurrentWeather, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(16.dp))
         WeatherInfoBlock(modifier = Modifier
             .weight(1f),icon = R.drawable.ic_weather_sunrice_24dp,info = currentWeather.sunriseTime)
-        Spacer(modifier = Modifier.width(32.dp))
+        Icon(
+            imageVector = Icons.Rounded.ArrowRightAlt,
+            contentDescription = null,
+            Modifier
+                .fillMaxSize()
+                .aspectRatio(1f)
+                .weight(1f),
+            tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
+        )
         WeatherInfoBlock(modifier = Modifier
             .weight(1f),icon = R.drawable.ic_weather_sunset_24dp,info = currentWeather.sunsetTime)
         Spacer(modifier = Modifier.width(16.dp))
@@ -172,8 +180,7 @@ private fun SunMovementInformation(currentWeather: CurrentWeather) {
 }
 
 @Composable
-private fun WeatherInfoBlock(modifier: Modifier = Modifier, icon: Int, info: String) {
-
+private fun WeatherInfoBlock(modifier: Modifier = Modifier, icon: Int, info: String? = null) {
         Surface(
             modifier = modifier,
             shape = RoundedCornerShape(8.dp),
@@ -185,13 +192,15 @@ private fun WeatherInfoBlock(modifier: Modifier = Modifier, icon: Int, info: Str
                     modifier = Modifier.aspectRatio(1f),
                     painter = painterResource(icon),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.tertiary
+                    tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
                 )
-                Text(
-                    text = info,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    maxLines = 1
-                )
+                if (info != null) {
+                    Text(
+                        text = info,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        maxLines = 1
+                    )
+                }
             }
         }
 }

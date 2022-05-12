@@ -1,6 +1,7 @@
 package com.niqr.weatherlisttest.requests
 
 import android.location.Location
+import com.niqr.weatherapp.requests.getApiKey
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -10,7 +11,7 @@ suspend fun HttpClient.currentWeatherRequest(location: Location): HttpCurrentWea
         parameter("lat", "${location.latitude}")
         parameter("lon", "${location.longitude}")
         parameter("units", "metric")
-        parameter("appid", "e9213225af952422c82db3a81726e2a1")
+        parameter("appid", getApiKey())
     }.body()
 
 suspend fun HttpClient.weatherForestRequest(location: Location): HttpForecast.Body =
@@ -18,5 +19,5 @@ suspend fun HttpClient.weatherForestRequest(location: Location): HttpForecast.Bo
         parameter("lat", "${location.latitude}")
         parameter("lon", "${location.longitude}")
         parameter("units", "metric")
-        parameter("appid", "e9213225af952422c82db3a81726e2a1")
+        parameter("appid", getApiKey())
     }.body()

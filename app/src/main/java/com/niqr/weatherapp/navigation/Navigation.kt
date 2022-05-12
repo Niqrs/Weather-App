@@ -1,13 +1,13 @@
 package com.niqr.weatherapp.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -69,7 +69,7 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                     }
 
                     Scaffold(
-                        topBar = { TopAppBar(navController) },
+                        topBar = { TopAppBar(navController) { viewModel.dynamicColors = !viewModel.dynamicColors } },
                         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         bottomBar = { BottomNavigationBar(navController) },
 
@@ -86,7 +86,11 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
                         }
                     }
                 } else {
-                    ClickableText(text = AnnotatedString("Turn on Internet please"), onClick = {})
+                    Scaffold(topBar = {CenterAlignedTopAppBar(title = { Text(text = "Error") })}) { innerPadding ->
+                        Box(modifier = Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                            Text(text = AnnotatedString("Turn on the internet please"), color = MaterialTheme.colorScheme.tertiary)
+                        }
+                    }
                 }
             }
         }
@@ -103,13 +107,25 @@ fun Navigation(viewModel: WeatherViewModel, activity: MainActivity) {
 }
 
 @Composable
-fun TopAppBar(navController: NavController) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-        title = { navController.currentBackStackEntryAsState().value?.destination?.route?.let { route ->
-            Text(route.replaceFirstChar{ it.uppercaseChar() }, color = MaterialTheme.colorScheme.onPrimary)
-        } },
-    )
+fun TopAppBar(navController: NavController, onActionClick: () -> Unit) {
+    Column {
+        CenterAlignedTopAppBar(
+//        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) secondaryContainer else primary }),
+            title = { navController.currentBackStackEntryAsState().value?.destination?.route?.let { route ->
+                Text(route.replaceFirstChar{ it.uppercaseChar() }, color = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary })
+            } },
+            actions = {
+/*                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    IconButton(onClick = onActionClick) {
+                        Icon(imageVector = Icons.Rounded.ColorLens, contentDescription = null, tint =  MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary })
+                    }
+                }*/
+            }
+        )
+        Divider(modifier = Modifier
+            .fillMaxWidth()
+            .height(2.dp), color = MaterialTheme.colorScheme.surfaceVariant)
+    }
 }
 
 @Composable
@@ -118,7 +134,7 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar() {
+    NavigationBar {
 
         bottomBarScreens.forEach { screen ->
 

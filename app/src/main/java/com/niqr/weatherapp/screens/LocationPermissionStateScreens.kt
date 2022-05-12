@@ -35,8 +35,8 @@ fun LocationPermissionDeniedScreen(
             tint = MaterialTheme.colorScheme.primary
         )
         Divider(modifier = Modifier.padding(bottom = 8.dp).width(96.dp))
-        Text("WeatherApp needs your location permission", color = MaterialTheme.colorScheme.primary)
-        Text("Click to open settings", color = MaterialTheme.colorScheme.primary)
+        Text("WeatherApp needs your location permission", color = MaterialTheme.colorScheme.tertiary)
+        Text("Click to open settings", color = MaterialTheme.colorScheme.tertiary)
     }
 }
 
@@ -58,8 +58,8 @@ fun ShouldShowRequestPermissionRationaleScreen(
             tint = MaterialTheme.colorScheme.primary
         )
         Divider(modifier = Modifier.padding(bottom = 8.dp).width(96.dp))
-        Text("WeatherApp needs your location permission", color = MaterialTheme.colorScheme.primary)
-        Text("Click to open dialog", color = MaterialTheme.colorScheme.primary)
+        Text("WeatherApp needs your location permission", color = MaterialTheme.colorScheme.tertiary)
+        Text("Click to open dialog", color = MaterialTheme.colorScheme.tertiary)
     }
 }
 

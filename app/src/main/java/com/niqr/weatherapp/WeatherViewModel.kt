@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -32,6 +31,8 @@ class WeatherViewModel: ViewModel() {
         private set
     var isLocationEnabled by mutableStateOf<Boolean?>(null)
     var isInternetAvailable by mutableStateOf(false)
+
+    var dynamicColors by mutableStateOf(false)
 
     fun updateLocationPermissionState(activity: MainActivity) =
         when {
@@ -60,12 +61,10 @@ class WeatherViewModel: ViewModel() {
         val location: Location? =
             try {
                 if (isInternetAvailable) {
-                    Log.d("", "FEfefefefefeffe1")
                     locationTask()
                 }
                 else
                 {
-                    Log.d("", "FEfefefefefeffe")
                     null
                 }
             } catch (e: Exception) {
@@ -92,8 +91,6 @@ class WeatherViewModel: ViewModel() {
     }
 
     private suspend fun updateForecast(location: Location?) {
-        Log.d("", location.toString())
-        Log.d("", "11111111111111111111111111111111111111")
         forecastsState =
             if (location == null)
                 Lce.Error(Throwable())

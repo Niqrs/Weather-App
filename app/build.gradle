@@ -5,6 +5,10 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+        }
+    }
     compileSdk 32
 
     defaultConfig {
@@ -79,4 +83,6 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.3-alpha"
 
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.24.5-alpha"
 }

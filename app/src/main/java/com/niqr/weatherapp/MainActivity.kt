@@ -20,14 +20,17 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.location.LocationManagerCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -87,7 +90,6 @@ class MainActivity : ComponentActivity() {
                     isResolutionLaunched = false
                     viewModel.isLocationEnabled = false
                     viewModel.isRefreshing = false
-                    Log.d("", "FFFFFFFFFFFFFFFfff")
                     locationCancellationTokenSource.cancel()
                     locationCancellationTokenSource = CancellationTokenSource()
                     viewModel.setErrorState()
@@ -115,7 +117,7 @@ class MainActivity : ComponentActivity() {
         })
 
         setContent {
-            WeatherAppTheme {
+            WeatherAppTheme(dynamicColor = viewModel.dynamicColors) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -189,7 +191,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun App(viewModel: WeatherViewModel, activity: MainActivity) {
+fun App(viewModel: WeatherViewModel, activity: MainActivity) {// Remember a SystemUiController
+    val systemUiController = rememberSystemUiController()
+//    val useDarkIcons = isSystemInDarkTheme()
+    val statusBarColor = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) secondaryContainer else tertiary }
+
+    SideEffect {
+        // Update all of the system bar colors to be transparent, and use
+        // dark icons if we're in light theme
+        systemUiController.setSystemBarsColor(
+            color = statusBarColor,
+//            darkIcons = useDarkIcons
+        )
+    }
+
     viewModel.updateLocationPermissionState(activity)
     Navigation(viewModel, activity)
 }

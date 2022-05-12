@@ -1,5 +1,6 @@
 package com.niqr.weatherapp.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -71,7 +72,7 @@ private fun Error(error: Throwable) {
             modifier = Modifier.size(256.dp).aspectRatio(1f),
             painter = painterResource(R.drawable.ic_sad_cloud_24dp),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
         )
         Text("Something went wrong", color = MaterialTheme.colorScheme.primary)
         Text("Swipe to Refresh", color = MaterialTheme.colorScheme.primary)
@@ -85,22 +86,22 @@ private fun Forecasts(
     weatherForecasts: List<WeatherForecast>
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item { Spacer(modifier = Modifier.height(6.dp)) }
+        item { Spacer(modifier = Modifier.height(14.dp)) }
         itemsIndexed(weatherForecasts) { index, weatherForecast ->
             when (index) {
                 0 -> {
-                    Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                    Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }, fontWeight = FontWeight.Medium, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 else -> {
                     if (weatherForecast.dayOfWeek != weatherForecasts[index - 1].dayOfWeek) {
-                        Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+                        Text(modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp), text = weatherForecast.dayOfWeek, color = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }, fontWeight = FontWeight.Medium, fontSize = 18.sp)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             }
             ForecastBlock(weatherForecast)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(14.dp))
         }
     }
 }
@@ -126,7 +127,7 @@ fun ForecastBlock(weatherForecast: WeatherForecast) {
                     .size(with(LocalDensity.current) {
                         72.sp.toDp()
                     }),
-                tint = MaterialTheme.colorScheme.tertiary
+                tint = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -137,7 +138,7 @@ fun ForecastBlock(weatherForecast: WeatherForecast) {
                 modifier = Modifier.padding(horizontal = 6.dp),
                 text = "${weatherForecast.temperature}°",
                 fontSize = 64.sp,
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.run { if (isSystemInDarkTheme()) onTertiaryContainer else tertiary }
             )
         }
     }
